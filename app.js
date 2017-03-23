@@ -1,45 +1,47 @@
-var express =require('express');
-var app = express();
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var path=require('path');
 
+var index = require('./routes/index');
+var users = require('./routes/users');
 
+var app = express();
+
+// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-var latest =new Object;
+app.use('/', index);
+app.use('/users', users);
 
-app.post('/post',function(req,res){
-	//console.log(req.body);
-	latest[req.body.lno]={};
-    latest[req.body.lno]['col'] =  req.body.col;
-    latest[req.body.lno]['noc'] = req.body.noc;
-    latest[req.body.lno]['lno']= req.body.lno;
-    latest[req.body.lno]['status'] = 'change';
-    res.send({'message':'success'});
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-app.get('/get',function(req,res){
-    var send={};
-    //res.send(Object.keys(latest).length.toString());
-    var c=0;
-    for(var i in latest){
-		console.log(latest[i]);
-        if(latest[i]['status']=="change"){
-			send[latest[i]['lno']]=latest[i];
-			latest[i].status="sent";
-		}
-        if(c==parseInt(Object.keys(latest).length.toString())-1)
-        res.send(send);
-        c++;
-    }
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
-app.get('/',function(req,res){
-    res.send("hello");
-});
-
-app.listen(3000);
-module.exports=app;
+module.exports = app;

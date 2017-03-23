@@ -7,9 +7,15 @@
 url: https://realtime-traffic.herokuapp.com/post
 method: POST
 ```
-
+#### request structure
+```javascript
+{
+	"lno":"<lane number>",
+	"col":"<color of traffic light>",
+	"noc":"<number of cars>"
+}
+```
 #### SAMPLE
-
 #### request body
 ```javascript
 {
@@ -46,7 +52,6 @@ method: GET
 ```
 
 #### SAMPLE
-
 #### response
 ```javascript
 {

@@ -2,8 +2,10 @@ var express =require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var path=require('path');
+
+
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine','ejs');
+app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -36,7 +38,8 @@ app.get('/get',function(req,res){
 });
 
 app.get('/',function(req,res){
-    res.render('index.ejs');
+    res.send("hello");
 });
 
 app.listen(3000);
+module.exports=app;

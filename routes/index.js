@@ -12,6 +12,7 @@ for(var i=0;i<4;i++){
 router.post('/post',function(req,res){
     latest[req.body.lno]['col'] = req.body.col;
     latest[req.body.lno]['lno']= req.body.lno;
+    res.status(200);
     res.send({'message':'success'});
 });
 
@@ -19,11 +20,14 @@ router.post('/post_noc',function(req,res){
 	for(var i=0;i<4;i++){
 		latest[i]['noc']=req.body[i];
 	}
+	res.status(200);
 	res.send({'message':'success'})
 });
 
 router.get('/get',function(req,res){
     var send=latest;
+    res.status(200);
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.send(send);
 });
 

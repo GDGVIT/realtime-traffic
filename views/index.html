@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+  <head>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Real-time Trafic Analytics</title>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style type="text/css">
+    body{
+      overflow-x: hidden;
+    }
+    body {
+      font-family: sans-serif;
+    }
+
+    #controlPanel {
+      float: left;
+      padding-top: 30px;
+    }
+
+    .button {
+      background-color: gray;
+      color: white;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      margin: 90px 40px;
+      cursor: pointer;
+    }
+
+    #traffic-light {
+      height: 300px;
+      width: 100px;
+      float: left;
+      background-color: #333;
+      border-radius: 40px;
+      margin: 30px 0;
+      padding: 20px;
+      margin-top: 50px !important;
+    }
+
+    .bulb2,.bulb3 {
+      height: 50px;
+      width: 50px;
+      background-color: #111;
+      border-radius: 50%;
+      margin: 25px auto;
+      transition: background 500ms;
+    }
+     #traffic-light1 {
+      height: 100px;
+      width: 300px;
+      float: left;
+      background-color: #333;
+      border-radius: 40px;
+      margin: 30px 0;
+      padding: 20px;
+      margin-left: 32.5% !important;
+      position: absolute;
+    }
+
+    .bulb1,.bulb4{
+      position: relative;
+      height: 50px;
+      width: 50px;
+      float: left;
+      background-color: #111;
+      border-radius: 50%;
+      margin-right: 21px !important;
+      margin-top: 6px;
+      margin-left: 15px !important;
+      transition: background 500ms;
+    }
+    @media(max-width: 1280px){
+      #traffic-light1{
+        margin-left: 24.5% !important;
+      }
+      #traffic-light{
+        margin-top: 0px !important;
+      }
+    }
+    @media(max-width: 1500px){
+      #traffic-light1{
+        margin-left: 27.5% !important;
+      }
+      #traffic-light{
+        margin-top: 20px !important;
+      }
+    }
+    .image { 
+   position: relative; 
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 15px;
+    
+}
+th{
+  font-size: 20px;
+  font-weight: 200%;
+}
+
+h2 { 
+   position: absolute;  
+   color: white;
+   top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+  </style>
+  </head>
+
+<body>
+<script type="text/javascript">
+  
+var interval=2000; 
+function doAjax(){
+
+  $.ajax({
+     type : "GET",
+     dataType : "json",
+     url : "https://realtime-traffic.herokuapp.com/get",
+     success: function(data){
+        var table = $("#table tbody");
+        $.each(data, function(idx, elem){
+        table.append("<tr><td align='center'>"+elem.lno+"</td><td align='center'>"+elem.noc+"</td></tr>");
+    });
+        var i=0;
+        var str='bulb';
+        $.each(data, function(idx, elem){
+        i=i+1;
+        str='.'+str+i;
+        // alert(str);
+        if(elem.col=='G'){
+
+          var bulb1=document.querySelector(str);
+          
+          bulb1.style.backgroundColor='green';
+        }
+        if(elem.col=='Y'){
+          var bulb1=document.querySelector(str);
+          
+          bulb1.style.backgroundColor='yellow';
+        }
+        if(elem.col=='R'){
+          var bulb1=document.querySelector(str);
+          
+          bulb1.style.backgroundColor='red';
+        }
+        str='bulb';
+
+        }); 
+      }
+  });
+}
+setTimeout(doAjax,interval);
+
+</script>
+<h1 style="font-size: 40px; left: 50px;" > Real-time Traffic Analytics </h1>
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4 push-4">
+  <img src='../public/road.jpg' class="img-responsive image center-block" />
+  <h2 class="center-block"> Lane 1</h2>
+  </div>
+  <div class="col-md-4">
+<table id="table">
+  <tr>
+    <th align="center">Lane Number</th>
+    <th>Number of cars</th>
+  </tr>
+</table>
+  </div>
+</div>
+<br>
+<div class="row">
+<div class="col-md-3">
+  <img src='../public/road1.jpg' class='img-responsive image center-block' />
+  <h2 class="center-block"> Lane 2</h2>
+</div>
+<div class="col-md-6">
+  <div id="traffic-light" style="float: left;">
+    <div id="stopLight" class="bulb2" ></div>
+    <div id="slowLight" class="bulb2" ></div>
+    <div id="goLight" class="bulb2" ></div>
+  </div>
+  <div id="traffic-light1" style="top: 0px;" class="center-block">
+    <div id="stopLight" class="bulb1" ></div>
+    <div id="slowLight" class="bulb1" ></div>
+    <div id="goLight" class="bulb1" ></div>
+  </div>
+  <div id="traffic-light1" style="bottom: 0px !important;" class="center-block">
+    <div id="stopLight" class="bulb4" ></div>
+    <div id="slowLight" class="bulb4" ></div>
+    <div id="goLight" class="bulb4" ></div>
+  </div>
+  <div id="traffic-light" style="float: right;">
+    <div id="stopLight" class="bulb3" ></div>
+    <div id="slowLight" class="bulb3" ></div>
+    <div id="goLight" class="bulb3" ></div>
+  </div>
+</div>
+<div class="col-md-3">
+  <img src='../public/road1.jpg' class='img-responsive image center-block' />  
+  <h2 class="center-block"> Lane 3</h2>
+</div>
+</div>
+<br>
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4 push-4">
+  <img src='../public/road.jpg' class="img-responsive image center-block" />
+  <h2 class="center-block"> Lane 4</h2>
+  </div>
+</div>
+
+
+
+</body>
